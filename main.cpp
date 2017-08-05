@@ -29,6 +29,9 @@ void printUsage() {
     cout << "qoten list - Returns a list of projects based on given criteria" << endl;
     cout << "qoten view $(pluginId) - Shows raw project info in JSON format" << endl;
     cout << "qoten versions $(pluginId) - Shows versions of plugin" << endl;
+    cout << "qoten add $(pluginId) - Install recommended version of specified plugin into 'mods' dir" << endl;
+    cout << "qoten remove $(pluginId) - Remove installed plugin from 'mods' dir" << endl;
+    cout << "qoten search $(text) - Search for plugins" << endl;
 }
 
 int main(int argc, const char * argv[]) {
@@ -45,7 +48,7 @@ int main(int argc, const char * argv[]) {
             cout << "projects count = " << projects.size() << endl;
             for(size_t i = 0; i < projects.size(); ++i) {
                 auto &project = projects[i];
-                cout << i << ") " << project.name << " ( pluginId: '" << project.pluginId << "')" << endl;
+                cout << i << ") " << project.name << " ( pluginId: '" << project.pluginId << "') " << (project.description ? *project.description : "") << endl;
             }
         }else if(args[1] == "view") {
             if(args.size() > 2){
@@ -123,6 +126,23 @@ int main(int argc, const char * argv[]) {
                 cout << "Plugin '" << pluginId << "' removed." << endl;
             }else{
                 cout << "pluginId expected right after 'add' word" << endl;
+                return 1;
+            }
+        }else if(args[1] == "search") {
+            if(args.size() > 2) {
+                auto &q = args[2];
+                auto plugins = api.searchProjects(q);
+                if(plugins.size()){
+                    cout << "Found " << plugins.size() << " plugins:" << endl;
+                    for(size_t i = 0; i < plugins.size(); ++i) {
+                        auto &project = plugins[i];
+                        cout << i << ") " << project.name << " ( pluginId: '" << project.pluginId << "') " << (project.description ? *project.description : "") << endl;
+                    }
+                }else{
+                    cout << "Nothing found :(" << endl;
+                }
+            }else{
+                cout << "search text expected right after 'search' word" << endl;
                 return 1;
             }
         }

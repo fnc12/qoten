@@ -35,6 +35,8 @@ namespace Services {
         
         std::vector<Project> listProjects();
         
+        std::vector<Project> searchProjects(const std::string &q);
+        
         std::shared_ptr<Project> getProject(const std::string &pluginId);
         
         std::shared_ptr<std::vector<Version>> getProjectVersions(const std::string &pluginId);

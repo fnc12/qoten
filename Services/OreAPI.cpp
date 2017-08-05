@@ -71,6 +71,27 @@ std::vector<Project> Services::OreAPI::listProjects() {
     }
 }
 
+std::vector<Project> Services::OreAPI::searchProjects(const std::string &q) {
+    auto curl = curl_easy_init();
+    CurlCleaner cleaner(curl);
+    auto url = this->createUrl("/api/projects", {
+        { "q", q },
+    });
+    curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeMemoryCallback);
+    std::stringstream ss;
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&ss);
+    auto res = curl_easy_perform(curl);
+    if(res == CURLE_OK) {
+        auto data = ss.str();
+        auto j = json::parse(data);
+        return j;
+    }else{
+        auto errorText = curl_easy_strerror(res);
+        throw std::runtime_error(errorText);
+    }
+}
+
 std::shared_ptr<Download> Services::OreAPI::downloadProjectVersion(const std::string &pluginId, const std::string &versionName) {
     auto curl = curl_easy_init();
     CurlCleaner cleaner(curl);
