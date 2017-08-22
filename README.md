@@ -6,7 +6,7 @@ Package manager for [Sponge minecraft server](https://www.spongepowered.org)
 
 `qoten` is a simple CLI tool that allows you to view plugins, search plugins, view versions, install and remove plugins from your sponge server.
 
-```c++
+```
 qoten list - Returns a list of projects based on given criteria
 qoten view $(pluginId) - Shows raw project info in JSON format
 qoten versions $(pluginId) - Shows versions of plugin
